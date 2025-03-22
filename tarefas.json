@@ -124,5 +124,15 @@
             "nome": "Banho",
             "concluida": true
         }
+    ],
+    "1999-01-02": [
+        {
+            "nome": "Passeio no parque",
+            "concluida": true
+        },
+        {
+            "nome": "Tomar banho",
+            "concluida": false
+        }
     ]
 }
