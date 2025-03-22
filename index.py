@@ -5,7 +5,6 @@ import os
 #Definindo arquivo JSON
 arquivo_json = "tarefas.json"
 
-
 #Função para ler o JSON
 def ler_json():
     if os.path.exists(arquivo_json):
@@ -16,3 +15,9 @@ def ler_json():
                 print("Erro ao decodificar o arquivo JSON.")
                 return {}
     return {}
+
+#Função para salvar tarefas no arquivo JSON
+def salvar_json(tarefas):
+    with open(arquivo_json,"w") as file:
+        json.dump(tarefas,file,indent=4) #Salva com identação para melhor legibilidade
+
