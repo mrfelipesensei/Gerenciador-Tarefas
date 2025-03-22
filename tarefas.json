@@ -18,5 +18,11 @@
             "nome": "Leitura",
             "concluida": true
         }
+    ],
+    "2025-04-01": [
+        {
+            "nome": "Treinar",
+            "concluida": true
+        }
     ]
 }
