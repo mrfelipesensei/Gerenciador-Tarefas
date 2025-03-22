@@ -1,6 +1,9 @@
 #Importando bibliotecas
 import json
 import os
+from flask import Flask, render_template, request, redirect, url_for
+
+app = Flask(__name__)
 
 #Definindo arquivo JSON
 arquivo_json = "tarefas.json"
@@ -17,32 +20,7 @@ def ler_json():
     return {}
 
 #Função para salvar tarefas no arquivo JSON
-def salvar_json(tarefas,data,nova_tarefa):
-    #Verifica se a data já existe no dicionário, caso contrário, cria uma lista vazia para essa data
-    if data not in tarefas:
-        tarefas[data] = []
-
-    #Verifica se já xiste uma tarefa com o mesmo nome na lista
-    while any (tarefa["nome"] == nova_tarefa["nome"] for tarefa in tarefas[data]):
-        print(f"A tarefa '{nova_tarefa['nome']} já existe para o dia {data}.'")
-        nova_tarefa["nome"] = input("Digite um nome diferente para a tarefa: ")
-
-
-    #Agora, após garantir que o nome da tarefa é único, solicita o status de conclusão
-    while True:
-        concluida_input = input("A tarefa está concluída? ").strip().lower()
-        #Conversão "Sim" para True e "Não" para False
-        if concluida_input == "sim":
-            nova_tarefa["concluida"] = True
-            break
-        elif concluida_input == "não":
-            nova_tarefa["concluida"] = False
-            break
-        else:
-            print("Entrada inválida. Responda com 'Sim' ou 'Não'.")
-
-    #Adiciona a nova tarefa à lista correspondente à data
-    tarefas[data].append(nova_tarefa)
+def salvar_json(tarefas,data):
     with open(arquivo_json,"w") as file:
         json.dump(tarefas,file,indent=4)
 
@@ -57,7 +35,7 @@ def calcular_porcentagem_sucesso(tarefas, data):
         return total_tarefas, concluidas, porcentagem
     return 0, 0, 0 #Retorna zero caso não haja tarefas registradas
 
-#Função para os inputs do usuário
+'''#Função para os inputs do usuário
 def obter_inputs():
     data_atual = input("Digite a data (YYYY-MM-DD): ")
     numero_tarefas = int(input(f"Quantas tarefas você deseja adicionar para o dia {data_atual}?"))
@@ -131,8 +109,29 @@ def main():
             break
         else:
             print("Opção inválida. Tente novamente.")
-    
+'''    
 
+@app.route("/",methods=["GET","POST"])
+def index():
+    tarefas = ler_json()
+    if request.method == "POST":
+        data = request.form["dtata"]
+        nome_tarefa = request.form["nome_tarefa"]
+        concluida = request.form.get("concluida") == "on"
+
+        if data not in tarefas:
+            tarefas[data] = []
+
+        tarefa_existente = next((t for t in tarefas[data] if t['nome'] == nome_tarefa),None)
+        if tarefa_existente:
+            return "Tarefa já existe para este dia."
+    
+        nova_tarefa = {'nome':nome_tarefa,"concluida":concluida}
+        tarefas[data].append(nova_tarefa)
+        salvar_json(tarefas)
+
+        return redirect(url_for("index"))
+    return render_template("index.html",tarefas=tarefas)
 
 if __name__ == "__main__":
     main()
