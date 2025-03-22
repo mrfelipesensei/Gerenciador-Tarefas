@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarefas de {{ data }}</title>
+</head>
+<body>
+    <h1>Tarefas de {{ data }}</h1>
+    <ul>
+        {% for tarefa in tarefas %}
+        <li>{{tarefa.nome}} - {% if tarefa.concluida %}Concluída{% else %}Pendente {% endif %}</li>
+        {% enfor %}
+    </ul>
+    <p>Tarefas Concluídas: {{concluidas}}/{{total_tarefas}} ({{porcentagem:.2f}}%)</p>
+    <a href="/">Voltar</a>
+</body>
+</html>
