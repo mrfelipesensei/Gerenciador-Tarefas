@@ -21,13 +21,15 @@ def salvar_json(tarefas,data,nova_tarefa):
     #Verifica se a data já existe no dicionário, caso contrário, cria uma lista vazia para essa data
     if data not in tarefas:
         tarefas[data] = []
-    
-    #Adiciona a nova tarefa à lista correspondente à data
-    tarefas[data].append(nova_tarefa)
 
-
-    with open(arquivo_json,"w") as file:
-        json.dump(tarefas,file,indent=4) #Salva com identação para melhor legibilidade
+    #Verifica se já existe uma tarefa com o mesmo nome na lista
+    if not any(tarefa["nome"] == nova_tarefa["nome"] for tarefa in tarefas[data]):
+        #Adiciona a nova tarefa à lista correspondente à data
+        tarefas[data].append(nova_tarefa)
+        with open(arquivo_json,"w") as file:
+            json.dump(tarefas,file,indent=4) #Salva com identação para melhor legibilidade
+    else:
+        print(f"A tarefa '{nova_tarefa["nome"]}' já existe para o dia {data}.")
 
 #Função para calcular a porcentagem de tarefas concluídas
 def calcular_porcentagem_sucesso(tarefas, data):
