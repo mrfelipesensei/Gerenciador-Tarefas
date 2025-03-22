@@ -19,7 +19,7 @@
     <h2>Tarefas por Data</h2>
     <ul>
         {% for data in tarefas %}
-        <li><a href="{{url_for('exibir_tarefas',data=data)}}"{{data}}></a></li>
+        <li><a href="{{url_for('exibir_tarefas',data=data)}}">{{data}}></a></li>
         {% endfor %}
     </ul>
 </body>

@@ -10,9 +10,9 @@
     <ul>
         {% for tarefa in tarefas %}
         <li>{{tarefa.nome}} - {% if tarefa.concluida %}Concluída{% else %}Pendente {% endif %}</li>
-        {% enfor %}
+        {% endfor %}
     </ul>
-    <p>Tarefas Concluídas: {{concluidas}}/{{total_tarefas}} ({{porcentagem:.2f}}%)</p>
+    <p>Tarefas Concluídas: {{concluidas}}/{{total_tarefas}} ({{"%.2f"|format(porcentagem)}}%)</p>
     <a href="/">Voltar</a>
 </body>
 </html>
