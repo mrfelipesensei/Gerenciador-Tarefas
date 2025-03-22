@@ -95,24 +95,39 @@ def exibir_por_data(tarefas):
         print(f"\nNenhuma tarefa encontrada para {data_busca}.")
 
 
+#Função para registrar tarefas
+def registrar_tarefa(tarefas):
+    #Captura os inputs iniciais
+    data_atual, numero_tarefas = obter_inputs()
+    #Captura as tarefas do usuário
+    capturar_tarefas(numero_tarefas, data_atual, tarefas)
+    #Calcula a porcentagem
+    total_tarefas, concluidas, porcentagem = calcular_porcentagem_sucesso(tarefas, data_atual)
+    print(f"\n{numero_tarefas} tarefas adicionadas para o dia {data_atual};")
+    print(f"Tarefas concluídas: {concluidas}/{total_tarefas} ({porcentagem:.2f}%)")
+
 #Função principal
 def main():
     tarefas = ler_json()
 
-    #Captura os inputs iniciais
-    data_atual, numero_tarefas = obter_inputs()
+    while True:
+        print("\n--Gerenciador de Tarefas--")
+        print("1. Buscar tarefas por data")
+        print("2. Registrar tarefas")
+        print("3. Sair")
 
-    #Captura as tarefas do usuário
-    capturar_tarefas(numero_tarefas, data_atual, tarefas)
+        opcao = int(input("Digite o número da opção desejada: "))
     
-
-    #Calcula a porcentagem
-    total_tarefas, concluidas, porcentagem = calcular_porcentagem_sucesso(tarefas, data_atual)
-
-
-    print(f"\n{numero_tarefas} tarefas adicionadas para o dia {data_atual};")
-    print(f"Tarefas concluídas: {concluidas}/{total_tarefas} ({porcentagem:.2f}%)")
-    '''print("Tarefas atuais:",json.dumps(tarefas,indent=4))'''
+    
+        if opcao == 1:
+            exibir_por_data(tarefas)
+        elif opcao == 2:
+            registrar_tarefa(tarefas)
+        elif opcao == 3:
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+    
 
 
 if __name__ == "__main__":
