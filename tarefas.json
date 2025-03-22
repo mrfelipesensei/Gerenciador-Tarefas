@@ -24,5 +24,11 @@
             "nome": "Treinar",
             "concluida": true
         }
+    ],
+    "2025-03-23": [
+        {
+            "nome": "Lavar Carro",
+            "concluida": false
+        }
     ]
 }
