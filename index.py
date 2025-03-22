@@ -75,6 +75,13 @@ def capturar_tarefas(numero_tarefas,data,tarefas):
 
         salvar_json(tarefas,data,nova_tarefa)
 
+#Função Buscar tarefas por data
+def  buscar_tarefas_por_data(tarefas, data_busca):
+    if data_busca in tarefas:
+        return tarefas[data_busca]
+    else:
+        return []
+
 
 #Função principal
 def main():
