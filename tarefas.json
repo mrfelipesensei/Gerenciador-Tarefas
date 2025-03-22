@@ -1,0 +1,9 @@
+{
+    "2025-03-22" : [
+        {"nome": "Treino", "concluida": false},
+        {"nome": "Estudar Python", "concluida": false}
+    ],
+    "2025-03-21" : [
+        {"nome": "Leitura", "concluida" : true}
+    ]
+}
