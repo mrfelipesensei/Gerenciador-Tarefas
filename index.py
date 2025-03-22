@@ -29,26 +29,25 @@ def salvar_json(tarefas,data,nova_tarefa):
     with open(arquivo_json,"w") as file:
         json.dump(tarefas,file,indent=4) #Salva com identação para melhor legibilidade
 
+#Função para calcular a porcentagem de tarefas concluídas
 def calcular_porcentagem_sucesso(tarefas, data):
     if data in tarefas and len(tarefas[data]) > 0:
         total_tarefas = len(tarefas[data])
         concluidas = sum(1 for tarefa in tarefas[data] if tarefa["concluida"]) #Conta tarefas concluídas
 
-        porcetagem = (concluidas/total_tarefas) * 100
-        return total_tarefas, concluidas, porcetagem
+        porcentagem = (concluidas/total_tarefas) * 100
+        return total_tarefas, concluidas, porcentagem
     return 0, 0, 0 #Retorna zero caso não haja tarefas registradas
 
-
-#Função principal
-def main():
-    tarefas = ler_json()
-
-    #Inserção de data pelo usuário
-    data_atual = input("Digite a data (YYY-MM-DD): ")
-    
-    #Define o número de tarefas a serem adicionadas
+#Função para os inputs do usuário
+def obter_inputs():
+    data_atual = input("Digite a data (YYYY-MM-DD): ")
     numero_tarefas = int(input(f"Quantas tarefas você deseja adicionar para o dia {data_atual}?"))
+    return data_atual, numero_tarefas
 
+#Função para capturar as tarefas do usuário
+def capturar_tarefas(numero_tarefas):
+    lista_tarefas = []
     #Loop para adicionar múltiplas tarefas
     for i in range(numero_tarefas):
         print(f"\nTarefa {i+1}/{numero_tarefas}: ")
@@ -67,13 +66,23 @@ def main():
             else:
                 print("Entrada inválida. Responda com 'Sim' ou 'Não'.")
         
+        lista_tarefas.append({"nome": nome_tarefa, "concluida": concluida}) #Criando o dicionário da nova tarefa
 
-        nova_tarefa = {"nome": nome_tarefa, "concluida": concluida} #Criando o dicionário da nova tarefa
+    return lista_tarefas
 
-        salvar_json(tarefas,data_atual,nova_tarefa)
-
-    #Recarrega as tarefas após a inserção
+#Função principal
+def main():
     tarefas = ler_json()
+
+    #Captura os inputs iniciais
+    data_atual, numero_tarefas = obter_inputs()
+
+    #Captura as tarefas do usuário
+    novas_tarefas = capturar_tarefas(numero_tarefas)
+    
+    #Adiciona todas as tarefas à data correspondente
+    for tarefa in novas_tarefas:
+        salvar_json(tarefas, data_atual, tarefa)
 
     #Calcula a porcentagem
     total_tarefas, concluidas, porcentagem = calcular_porcentagem_sucesso(tarefas, data_atual)

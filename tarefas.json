@@ -52,5 +52,15 @@
             "nome": "AA",
             "concluida": false
         }
+    ],
+    "2024-01-24": [
+        {
+            "nome": "AA",
+            "concluida": false
+        },
+        {
+            "nome": "Banho",
+            "concluida": false
+        }
     ]
 }
