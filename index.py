@@ -24,8 +24,22 @@ def salvar_json(tarefas,data,nova_tarefa):
 
     #Verifica se já xiste uma tarefa com o mesmo nome na lista
     while any (tarefa["nome"] == nova_tarefa["nome"] for tarefa in tarefas[data]):
-        print(f"A tarefa '{nova_tarefa["nome"]} já existe para o dia {data}.'")
+        print(f"A tarefa '{nova_tarefa['nome']} já existe para o dia {data}.'")
         nova_tarefa["nome"] = input("Digite um nome diferente para a tarefa: ")
+
+
+    #Agora, após garantir que o nome da tarefa é único, solicita o status de conclusão
+    while True:
+        concluida_input = input("A tarefa está concluída? ").strip().lower()
+        #Conversão "Sim" para True e "Não" para False
+        if concluida_input == "sim":
+            nova_tarefa["concluida"] = True
+            break
+        elif concluida_input == "não":
+            nova_tarefa["concluida"] = False
+            break
+        else:
+            print("Entrada inválida. Responda com 'Sim' ou 'Não'.")
 
     #Adiciona a nova tarefa à lista correspondente à data
     tarefas[data].append(nova_tarefa)
@@ -50,29 +64,17 @@ def obter_inputs():
     return data_atual, numero_tarefas
 
 #Função para capturar as tarefas do usuário
-def capturar_tarefas(numero_tarefas):
-    lista_tarefas = []
+def capturar_tarefas(numero_tarefas,data,tarefas):
+    
     #Loop para adicionar múltiplas tarefas
     for i in range(numero_tarefas):
         print(f"\nTarefa {i+1}/{numero_tarefas}: ")
         nome_tarefa = input("Digite o nome da tarefa: ")
 
-        while True:
-            concluida_input = input("A tarefa está concluída? ").strip().lower()
+        nova_tarefa = {"nome": nome_tarefa}
 
-            #Conversão "Sim" para True e "Não" para False
-            if concluida_input == "sim":
-                concluida = True
-                break
-            elif concluida_input == "não":
-                concluida = False
-                break
-            else:
-                print("Entrada inválida. Responda com 'Sim' ou 'Não'.")
-        
-        lista_tarefas.append({"nome": nome_tarefa, "concluida": concluida}) #Criando o dicionário da nova tarefa
+        salvar_json(tarefas,data,nova_tarefa)
 
-    return lista_tarefas
 
 #Função principal
 def main():
@@ -82,11 +84,8 @@ def main():
     data_atual, numero_tarefas = obter_inputs()
 
     #Captura as tarefas do usuário
-    novas_tarefas = capturar_tarefas(numero_tarefas)
+    capturar_tarefas(numero_tarefas, data_atual, tarefas)
     
-    #Adiciona todas as tarefas à data correspondente
-    for tarefa in novas_tarefas:
-        salvar_json(tarefas, data_atual, tarefa)
 
     #Calcula a porcentagem
     total_tarefas, concluidas, porcentagem = calcular_porcentagem_sucesso(tarefas, data_atual)
