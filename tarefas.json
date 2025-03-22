@@ -7,6 +7,10 @@
         {
             "nome": "Estudar Python",
             "concluida": false
+        },
+        {
+            "nome": "Reuni\u00e3o",
+            "concluida": false
         }
     ],
     "2025-03-21": [
