@@ -29,14 +29,15 @@ def salvar_json(tarefas,data,nova_tarefa):
     with open(arquivo_json,"w") as file:
         json.dump(tarefas,file,indent=4) #Salva com identação para melhor legibilidade
 
-'''#Exemplo de uso
-tarefas = ler_json()
-data_atual = "2025-03-22"
-nova_tarefa = {"nome":"Reunião","concluida":False}
-#Salva a nova tarefa no arquivo
-salvar_json(tarefas,data_atual,nova_tarefa)
-#Exibe o conteúdo atual das tarefas
-print(tarefas)'''
+def calcular_porcentagem_sucesso(tarefas, data):
+    if data in tarefas and len(tarefas[data]) > 0:
+        total_tarefas = len(tarefas[data])
+        concluidas = sum(1 for tarefa in tarefas[data] if tarefa["concluida"]) #Conta tarefas concluídas
+
+        porcetagem = (concluidas/total_tarefas) * 100
+        return total_tarefas, concluidas, porcetagem
+    return 0, 0, 0 #Retorna zero caso não haja tarefas registradas
+
 
 #Função principal
 def main():
@@ -56,7 +57,7 @@ def main():
         while True:
             concluida_input = input("A tarefa está concluída? ").strip().lower()
 
-        #Conversão "Sim" para True e "Não" para False
+            #Conversão "Sim" para True e "Não" para False
             if concluida_input == "sim":
                 concluida = True
                 break
@@ -67,12 +68,20 @@ def main():
                 print("Entrada inválida. Responda com 'Sim' ou 'Não'.")
         
 
-    nova_tarefa = {"nome": nome_tarefa, "concluida": concluida} #Criando o dicionário da nova tarefa
+        nova_tarefa = {"nome": nome_tarefa, "concluida": concluida} #Criando o dicionário da nova tarefa
 
-    salvar_json(tarefas,data_atual,nova_tarefa)
+        salvar_json(tarefas,data_atual,nova_tarefa)
+
+    #Recarrega as tarefas após a inserção
+    tarefas = ler_json()
+
+    #Calcula a porcentagem
+    total_tarefas, concluidas, porcentagem = calcular_porcentagem_sucesso(tarefas, data_atual)
+
 
     print(f"\n{numero_tarefas} tarefas adicionadas para o dia {data_atual};")
-    print("Tarefas atuais:",json.dumps(tarefas,indent=4))
+    print(f"Tarefas concluídas: {concluidas}/{total_tarefas} ({porcentagem:.2f}%)")
+    '''print("Tarefas atuais:",json.dumps(tarefas,indent=4))'''
 
 
 if __name__ == "__main__":

@@ -30,5 +30,27 @@
             "nome": "Lavar Carro",
             "concluida": false
         }
+    ],
+    "2024-03-01": [
+        {
+            "nome": "C\u00e1rdio",
+            "concluida": false
+        }
+    ],
+    "2022-01-01": [
+        {
+            "nome": "Estudar",
+            "concluida": true
+        }
+    ],
+    "2022-01-24": [
+        {
+            "nome": "Banho",
+            "concluida": true
+        },
+        {
+            "nome": "AA",
+            "concluida": false
+        }
     ]
 }
