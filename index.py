@@ -91,6 +91,10 @@ def exibir_por_data(tarefas):
         print(f"\nTarefas encontradas para {data_busca}:")
         for tarefa in tarefas_encontradas:
             print(f"-{tarefa['nome']} (Concluída: {'Sim' if tarefa['concluida'] else 'Não'})")
+
+        #Calcula e exibe a porcetagem de tarefas concluídas
+        total_tarefas, concluidas, porcentagem = calcular_porcentagem_sucesso(tarefas,data_busca)
+        print(f"Tarefas concluídas: {concluidas}/{total_tarefas} ({porcentagem:.2f}%)")
     else:
         print(f"\nNenhuma tarefa encontrada para {data_busca}.")
 
