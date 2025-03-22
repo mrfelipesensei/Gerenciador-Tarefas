@@ -82,6 +82,18 @@ def  buscar_tarefas_por_data(tarefas, data_busca):
     else:
         return []
 
+#Função para exibir tarefas por data
+def exibir_por_data(tarefas):
+    data_busca = input("\nDigite a data para buscar tarefas (YYYY-MM-DD): ")
+    tarefas_encontradas = buscar_tarefas_por_data(tarefas,data_busca)
+
+    if tarefas_encontradas:
+        print(f"\nTarefas encontradas para {data_busca}:")
+        for tarefa in tarefas_encontradas:
+            print(f"-{tarefa['nome']} (Concluída: {'Sim' if tarefa['concluida'] else 'Não'})")
+    else:
+        print(f"\nNenhuma tarefa encontrada para {data_busca}.")
+
 
 #Função principal
 def main():
