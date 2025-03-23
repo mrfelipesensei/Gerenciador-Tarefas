@@ -1,10 +1,11 @@
 #Importando bibliotecas
 import json
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, request, jsonify
+from flask_cors import CORS #Necessário para permitir que o React acessa a API
 
 app = Flask(__name__)
-app.secret_key = "chave_secreta"
+CORS(app)
 
 #Definindo arquivo JSON
 arquivo_json = "tarefas.json"
@@ -39,45 +40,54 @@ def calcular_porcentagem_sucesso(tarefas, data):
         return total_tarefas, concluidas, porcentagem
     return 0, 0, 0 #Retorna zero caso não haja tarefas registradas
 
+#Endpoint para adicionar tarefas
+#O playload deve ter o seguinte formato:
+#{"data": "YYYY-MM-DD","tarefas":[{"nome": "Tarefa 1","concluida": false},{...} ] }
+@app.route("/tarefas",methods=["POST"])
+def adicionar_tarefas():
+    content = request.json
+    if not content:
+        return jsonify({"error":"Playload JSON não fornecido."}),400
     
+    data = content.get("data")
+    tarefas_novas = content.get("tarefas")
+    if not data or not tarefas_novas:
+        return jsonify({"error","Os campos 'data' e 'tarefas' são obrigatórios"}),400
 
-@app.route("/",methods=["GET","POST"])
-def index():
     tarefas = ler_json()
-    if request.method == "POST":
-        data = request.form["data"]
-        nome_tarefa = request.form["nome_tarefa"]
-        concluida = request.form.get("concluida") == "on"
+    if data not in tarefas:
+        tarefas[data] = []
 
-        if not data or not nome_tarefa:
-            flash("Data e nome da tarefa são obrigatórios.","error")
-            return redirect(url_for("index"))
-
-        if data not in tarefas:
-            tarefas[data] = []
-
+    #Adiciona cada tarefa, evitando duplicatas (pelo nome)
+    for nova in tarefas_novas:
+        nome_tarefa = nova.get("nome")
+        concluida = nova.get("concluida",False)
+        if not nome_tarefa:
+            continue #Ignora se não houver nome
         if any(tarefa["nome"] == nome_tarefa for tarefa in tarefas[data]):
-            flash("Tarefa já existe para este dia.","error")
-            return redirect(url_for("index"))
-    
-        nova_tarefa = {'nome':nome_tarefa,"concluida":concluida}
-        tarefas[data].append(nova_tarefa)
-        
-        if salvar_json(tarefas):
-            flash("Tarefa adicionada com sucesso!","success")
-        else:
-            flash("Erro ao salvar tarefa.","error")
+            continue #Pula se já existir essa tarefa
+        tarefas[data].append({"nome": nome_tarefa,"concluida": concluida})
 
-        return redirect(url_for("index"))
-    return render_template("index.html",tarefas=tarefas)
+    if salvar_json(tarefas):
+        return jsonify({"message":"Tarefas adicionadas com sucesso!"}), 201
+    else:
+        return jsonify({"error":"Erro ao salvar tarefas."}),500
 
 
-@app.route("/tarefas/<data>")
+#Endpoint para obter todas tarefas (agrupadas por data)
+@app.route("/tarefas/<data>",methods=["GET"])
 def exibir_tarefas(data):
     tarefas = ler_json()
-    tarefas_data = tarefas.get(data,[])
-    total_tarefas,concluidas,porcentagem = calcular_porcentagem_sucesso(tarefas,data)
-    return render_template("tarefas.html",data=data, tarefas=tarefas_data, total_tarefas=total_tarefas, concluidas=concluidas, porcentagem=porcentagem)
+    tarefas_data = tarefas.get(data, [])
+    total, concluidas, porcentagem = calcular_porcentagem_sucesso(tarefas,data)
+    return jsonify({
+        "data": data,
+        "tarefas": tarefas_data,
+        "total_tarefas": total,
+        "concluidas": concluidas,
+        "porcentagem": porcentagem
+    })
+
 
 if __name__ == "__main__":
     app.run(debug=True)
