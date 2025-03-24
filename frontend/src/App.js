@@ -68,11 +68,81 @@ function App() {
   };
 
   return (
+    
+    <div style={{ padding: "20px" }}>
+      <h1>Gerenciador de Tarefas</h1>
+      {message && <p>{message}</p>}
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Data (YYYY-MM-DD): </label>
+          <input
+            type="date"
+            value={data}
+            onChange={(e) => setData(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Quantidade de Tarefas: </label>
+          <input
+            type="number"
+            value={quantidade}
+            onChange={(e) => setQuantidade(e.target.value)}
+            min="1"
+            required
+          />
+          <button type="button" onClick={gerarCampos}>
+            Gerar Campos
+          </button>
+        </div>
+        {tarefas.length > 0 && (
+          <div>
+            {tarefas.map((tarefa, index) => (
+              <div key={index}>
+                <label>Tarefa {index + 1}: </label>
+                <input
+                  type="text"
+                  value={tarefa.nome}
+                  onChange={(e) =>
+                    handleTarefaChange(index, "nome", e.target.value)
+                  }
+                  required
+                />
+                <label> Concluída: </label>
+                <input
+                  type="checkbox"
+                  checked={tarefa.concluida}
+                  onChange={(e) =>
+                    handleTarefaChange(index, "concluida", e.target.checked)
+                  }
+                />
+              </div>
+            ))}
+          </div>
+        )}
+        <button type="submit">Salvar Tarefas</button>
+      </form>
 
-  )
-
-
-
+      <hr />
+      <h2>Lista de Tarefas</h2>
+      {Object.keys(tarefasSalvas).length === 0 ? (
+        <p>Nenhuma tarefa cadastrada.</p>
+      ) : (
+        Object.entries(tarefasSalvas).map(([dataKey, lista]) => (
+          <div key={dataKey}>
+            <h3>{dataKey}</h3>
+            <ul>
+              {lista.map((tarefa, index) => (
+                <li key={index}>
+                  {tarefa.nome} - {tarefa.concluida ? "Concluída" : "Pendente"}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      )}
+    </div>
+  );
 }
 
 export default App;
