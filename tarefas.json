@@ -134,5 +134,15 @@
             "nome": "Tomar banho",
             "concluida": false
         }
+    ],
+    "01-02-1992": [
+        {
+            "nome": "Windows 1",
+            "concluida": true
+        },
+        {
+            "nome": "Linux",
+            "concluida": false
+        }
     ]
 }

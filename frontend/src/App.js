@@ -34,6 +34,11 @@ function App() {
     novasTarefas[index][campo] = valor;
     setTarefas(novasTarefas);
   };
+  //Formatar data
+  const formatarData = (data) => {
+    const [dia, mes, ano] = data.split("-");
+    return `${ano}-${mes}-${dia}`; //Converte para DD-MM-YYYY
+  };
 
   //Envia as tarefas para o backend
   const handleSubmit = (e) => {
@@ -43,10 +48,12 @@ function App() {
       return;
     }
     
+    const dataFormatada = formatarData(data);
+
     fetch("http://127.0.0.1:5000/tarefas",{
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({data, tarefas}),
+      body: JSON.stringify({data: dataFormatada, tarefas}),
     })
       .then((res) => res.json())
       .then((result) => {

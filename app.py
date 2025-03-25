@@ -52,7 +52,7 @@ def adicionar_tarefas():
     data = content.get("data")
     tarefas_novas = content.get("tarefas")
     if not data or not tarefas_novas:
-        return jsonify({"error","Os campos 'data' e 'tarefas' são obrigatórios"}),400
+        return jsonify({"error":"Os campos 'data' e 'tarefas' são obrigatórios"}),400
 
     tarefas = ler_json()
     if data not in tarefas:
